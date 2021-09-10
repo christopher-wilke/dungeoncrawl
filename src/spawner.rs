@@ -22,20 +22,49 @@ pub fn spawn_monster(
     rng: &mut RandomNumberGenerator,
     pos: Point
 ) {
+
+    let (mut hp, mut name, mut glyph) = (0,"".to_string(), to_cp437('g'));
+
+    if rng.roll_dice(1, 10) >= 5 {
+        let goblin = goblin();
+        hp = goblin.0;
+        name = goblin.1;
+        glyph = goblin.2;
+    }
+    else {
+        let orc = orc();
+        hp = orc.0;
+        name = orc.1;
+        glyph = orc.2;
+    }
+
     ecs.push(
         (
             Enemy,
             pos,
             Render {
                 color: ColorPair::new(WHITE, BLACK),
-                glyph: match rng.range(0, 4) {
-                    0 => to_cp437('E'),
-                    1 => to_cp437('O'),
-                    2 => to_cp437('o'),
-                    _ => to_cp437('g')
-                }
+                glyph
             },
-            MovingRandomly {}
+            MovingRandomly{},
+            Health{current: hp, max: hp},
+            Name(name)
         )
     );
+}
+
+fn goblin() -> (i32, String, FontCharType) {
+    (
+        1,
+        "Goblin".to_string(),
+        to_cp437('g')
+    )
+}
+
+fn orc() -> (i32, String, FontCharType) {
+    (
+        2,
+        "Orc".to_string(),
+        to_cp437('o')
+    )
 }

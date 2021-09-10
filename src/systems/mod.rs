@@ -6,6 +6,7 @@ mod random_move;
 mod end_turn;
 mod movement;
 mod hud;
+mod tooltips;
 
 use crate::prelude::*;
 
